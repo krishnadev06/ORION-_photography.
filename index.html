@@ -288,20 +288,18 @@
         }
 
         /* Showcase Marquee Styles */
-        @keyframes scroll-left {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
         .showcase-marquee-container {
             -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
             mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+            overflow-x: auto;
+            cursor: grab;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        .showcase-marquee-track {
-            animation: scroll-left 20s linear infinite;
+        .showcase-marquee-container::-webkit-scrollbar {
+            display: none;
         }
-        .showcase-marquee-container:hover .showcase-marquee-track {
-            animation-play-state: paused;
-        }
+
         .showcase-item {
             flex-shrink: 0;
         }
@@ -1155,6 +1153,74 @@
                     link.addEventListener('click', closeNav);
                 }
             });
+
+             // --- Showcase Manual & Auto Scroll ---
+            const showcaseContainer = document.querySelector('.showcase-marquee-container');
+            if (showcaseContainer) {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+                let scrollInterval;
+                
+                const SCROLL_SPEED = 2; // Speed in pixels per interval
+                const INTERVAL_DELAY = 15; // Interval time in ms for smooth animation
+
+                const autoScroll = () => {
+                    showcaseContainer.scrollLeft += SCROLL_SPEED;
+                    if (showcaseContainer.scrollLeft >= (showcaseContainer.scrollWidth / 2)) {
+                        showcaseContainer.scrollLeft = 0;
+                    }
+                };
+
+                const startAutoScroll = () => {
+                    clearInterval(scrollInterval);
+                    scrollInterval = setInterval(autoScroll, INTERVAL_DELAY);
+                };
+
+                const stopAutoScroll = () => {
+                    clearInterval(scrollInterval);
+                };
+
+                // Pause on hover
+                showcaseContainer.addEventListener('mouseenter', stopAutoScroll);
+                showcaseContainer.addEventListener('mouseleave', startAutoScroll);
+
+                // Drag to scroll
+                showcaseContainer.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    showcaseContainer.style.cursor = 'grabbing';
+                    startX = e.pageX - showcaseContainer.offsetLeft;
+                    scrollLeft = showcaseContainer.scrollLeft;
+                    stopAutoScroll(); // Stop autoscroll when user interacts
+                });
+
+                showcaseContainer.addEventListener('mouseleave', () => {
+                    if (isDown) { // Only if dragging was in progress
+                        isDown = false;
+                        showcaseContainer.style.cursor = 'grab';
+                        startAutoScroll(); // Restart autoscroll when mouse leaves
+                    }
+                });
+
+                showcaseContainer.addEventListener('mouseup', () => {
+                    if (isDown) {
+                        isDown = false;
+                        showcaseContainer.style.cursor = 'grab';
+                        startAutoScroll(); // Restart autoscroll when user releases click
+                    }
+                });
+
+                showcaseContainer.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - showcaseContainer.offsetLeft;
+                    const walk = (x - startX) * 2; // scroll-fast factor
+                    showcaseContainer.scrollLeft = scrollLeft - walk;
+                });
+                
+                // Initial start
+                startAutoScroll();
+            }
 
             // --- About Modal ---
             const aboutModal = document.getElementById('about-modal');
