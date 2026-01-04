@@ -158,13 +158,38 @@
         .reveal {
             opacity: 0;
             transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .reveal.visible {
+        .reveal-from-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .reveal-from-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .reveal.visible, .reveal-from-right.visible, .reveal-from-left.visible {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .reveal-stagger.visible > * {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Dynamically add delays for stagger children via JS or inline CSS */
 
         @keyframes slide-in-from-left {
             from {
@@ -231,7 +256,7 @@
         /* Milestone Section Styles */
         #milestones {
             position: relative;
-            background-image: url('https://i.pinimg.com/736x/5f/aa/05/5faa051f72abc5db576ac0e45affa511.jpg');
+            background-image: url('https://cdn.pixabay.com/photo/2019/07/05/00/17/camera-4317584_640.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -278,13 +303,24 @@
             gap: 1rem; /* 16px */
             font-size: 1.05rem;
             color: var(--color-text-dark);
+            transition: transform 0.3s ease;
         }
+        
+        .service-item:hover {
+            transform: translateX(10px);
+        }
+        
         .service-item i {
             color: var(--color-accent);
             width: 24px;
             height: 24px;
             flex-shrink: 0;
             margin-top: 2px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .service-item:hover i {
+            transform: scale(1.3) rotate(5deg);
         }
 
         /* Showcase Marquee Styles */
@@ -359,7 +395,7 @@
     <!-- Header -->
     <header id="header" class="fixed top-0 left-0 w-full z-50 py-5">
         <div class="container mx-auto px-6 flex justify-between items-center max-w-7xl">
-             <a href="#hero" class="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-white z-50 tracking-wide">ORION photography</a>
+             <a href="#hero" class="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-white z-50 tracking-wide">ORION PHOTOGRAPHY</a>
              <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center space-x-10">
                 <a href="#about" class="about-modal-trigger text-white hover:text-gray-300 transition-colors tracking-wider">About</a>
@@ -554,31 +590,31 @@
         </section>
 
         <!-- About Us Section -->
-        <section id="about-us" class="py-16 sm:py-20 lg:py-28 bg-white">
+        <section id="about-us" class="py-16 sm:py-20 lg:py-28 bg-white overflow-hidden">
             <div class="container mx-auto px-6 max-w-7xl">
                 <div class="grid lg:grid-cols-2 gap-16 xl:gap-24 items-center">
-                    <div class="reveal">
-                        <p class="tracking-widest uppercase text-sm mb-3 text-[var(--color-accent)]">ABOUT ORION PHOTOGRAPHY</p>
-                        <h2 class="text-3xl sm:text-4xl xl:text-5xl font-serif mb-6 leading-tight">More Than Photographers, We Are Storytellers</h2>
-                        <p class="text-base md:text-lg leading-relaxed mb-6 text-gray-600">
+                    <div class="reveal-stagger">
+                        <p class="tracking-widest uppercase text-sm mb-3 text-[var(--color-accent)] font-semibold" style="transition-delay: 0.1s;">ABOUT ORION PHOTOGRAPHY</p>
+                        <h2 class="text-3xl sm:text-4xl xl:text-5xl font-serif mb-6 leading-tight" style="transition-delay: 0.2s;">More Than Photographers, We Are Storytellers</h2>
+                        <p class="text-base md:text-lg leading-relaxed mb-8 text-gray-600" style="transition-delay: 0.3s;">
                             Founded on a passion for authentic narrative, Orion Photography is a collective of artists dedicated to capturing the soul of your most cherished moments. We believe that the best photographs are born from genuine connection, trust, and a deep understanding of your unique story.
                         </p>
                         <div class="space-y-6 mt-8">
-                            <div class="service-item">
+                            <div class="service-item" style="transition-delay: 0.4s;">
                                 <i data-lucide="camera"></i>
                                 <div>
                                     <h4 class="font-bold">Candid Moments</h4>
                                     <p class="text-gray-600 text-base">We specialize in capturing the unscripted, fleeting moments of joy and emotion.</p>
                                 </div>
                             </div>
-                            <div class="service-item">
+                            <div class="service-item" style="transition-delay: 0.5s;">
                                 <i data-lucide="film"></i>
                                 <div>
                                     <h4 class="font-bold">Cinematic Films</h4>
                                     <p class="text-gray-600 text-base">Our videography turns your wedding day into a timeless film you'll rewatch for years.</p>
                                 </div>
                             </div>
-                            <div class="service-item">
+                            <div class="service-item" style="transition-delay: 0.6s;">
                                 <i data-lucide="heart"></i>
                                 <div>
                                     <h4 class="font-bold">Timeless Portraits</h4>
@@ -586,10 +622,17 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#aboutus" align="center" class="btn btn-primary mt-10 about-modal-trigger">Read Our Full Story</a>
+                        <div class="mt-10" style="transition-delay: 0.7s;">
+                           <a href="#aboutus" class="btn btn-primary about-modal-trigger">Read Our Full Story</a>
+                        </div>
                     </div>
-                    <div class="relative reveal order-first lg:order-last" style="transition-delay: 0.2s;">
-                     <img src="https://lh3.googleusercontent.com/p/AF1QipP9P9yxBXtVvyzCR8_DfmZWiw_QIAcJMXr-TtPQ=s1360-w1360-h1020-rw" alt="Orion Photography team at work">
+                    <div class="relative reveal-from-right order-first lg:order-last" style="transition-delay: 0.3s;">
+                        <div class="relative overflow-hidden rounded-lg shadow-2xl group">
+                            <img src="https://lh3.googleusercontent.com/p/AF1QipP9P9yxBXtVvyzCR8_DfmZWiw_QIAcJMXr-TtPQ=s1360-w1360-h1020-rw" alt="Orion Photography team at work" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 border-8 border-white/20 pointer-events-none"></div>
+                        </div>
+                        <!-- Decorative element -->
+                        <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-[var(--color-accent)] opacity-20 -z-10 rounded-full blur-2xl"></div>
                     </div>
                 </div>
             </div>
@@ -1507,7 +1550,7 @@
                 rootMargin: '0px 0px -100px 0px'
             });
 
-            document.querySelectorAll('.reveal').forEach(el => {
+            document.querySelectorAll('.reveal, .reveal-stagger, .reveal-from-right, .reveal-from-left').forEach(el => {
                 revealObserver.observe(el);
             });
 
